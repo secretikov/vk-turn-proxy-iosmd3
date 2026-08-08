@@ -1,0 +1,52 @@
+name: Build iOS App
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode.app
+
+    - name: Install dependencies
+      run: |
+        brew install mint
+        mint install yonaskolb/xcodegen
+
+    - name: Generate Xcode project
+      run: mint run xcodegen generate
+      working-directory: VKTurnProxy
+
+    - name: Build and archive
+      run: |
+        xcodebuild archive \
+          -workspace VKTurnProxy/VKTurnProxy.xcodeproj/project.xcworkspace \
+          -scheme VKTurnProxy \
+          -configuration Release \
+          -archivePath $PWD/build/VKTurnProxy.xcarchive \
+          -sdk iphoneos \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
+
+    - name: Export IPA
+      run: |
+        mkdir -p Payload
+        cp -r build/VKTurnProxy.xcarchive/Products/Applications/VKTurnProxy.app Payload/
+        zip -r VKTurnProxy.ipa Payload
+        rm -rf Payload
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: VKTurnProxy.ipa
+        path: VKTurnProxy.ipa
