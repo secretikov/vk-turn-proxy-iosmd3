@@ -91,7 +91,9 @@ struct ContentView: View {
             // larger screens the content fits without scrolling.
             ScrollView {
                 VStack(spacing: 16) {
-                    // Status indicator — compact size so the rest of the
+                    MD3Section {
+                        VStack(spacing: 16) {
+                            // Status indicator — compact size so the rest of the
                     // controls stay visible on small screens.
                     Circle()
                         .fill(statusColor)
@@ -179,13 +181,16 @@ struct ContentView: View {
                     // peerAddress / WG key). Never disables the Disconnect action.
                     .disabled(connectBlocked)
 
+                        }
+                    }
                     // Logs & Settings links
                     MainNavigationLinks(tunnel: tunnel)
                         .padding(.bottom, 8)
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.top, 8)
+                .padding(.vertical, 16)
             }
+            .background(Color(uiColor: .systemGroupedBackground))
             .navigationTitle("VK Turn Proxy")
             .navigationBarTitleDisplayMode(.inline)
             // Fires on first show AND when Settings is popped, so the displayed
@@ -306,12 +311,29 @@ private struct MainNavigationLinks: View {
     let tunnel: TunnelManager
 
     var body: some View {
-        HStack(spacing: 24) {
-            NavigationLink(destination: LogsView(tunnel: tunnel)) {
-                Label("Logs", systemImage: "doc.text")
-            }
-            NavigationLink(destination: SettingsView()) {
-                Label("Settings", systemImage: "gear")
+        MD3Section {
+            VStack(spacing: 0) {
+                NavigationLink(destination: LogsView(tunnel: tunnel)) {
+                    HStack {
+                        Label("Logs", systemImage: "doc.text").foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                Divider()
+                    .padding(.leading, 36)
+                    .padding(.vertical, 12)
+                NavigationLink(destination: SettingsView()) {
+                    HStack {
+                        Label("Settings", systemImage: "gear").foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
         }
     }
