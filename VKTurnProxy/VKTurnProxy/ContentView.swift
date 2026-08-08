@@ -470,8 +470,9 @@ struct SettingsView: View {
     // from what the tunnel does — it did exactly that from build 163 to 181.
     private var cookieConnCap: Int { TunnelConfig.cookieConnCap(callLinks: vkLinkLines.count) }
     var body: some View {
-        Form {
-            Section("VK Call Link") {
+        ScrollView {
+            VStack(spacing: 16) {
+            MD3Section("VK Call Link") {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(vkAuthEnabled
                          ? "VK Call Link(s) — one per line (currently \(vkLinkLines.count))"
@@ -521,7 +522,7 @@ struct SettingsView: View {
             // had. The leading circle (a .borderless Button, so its tap is
             // isolated from the row's navigation) sets the active server; the
             // name navigates into the editor.
-            Section {
+            MD3Section("Servers", content: {
                 ForEach(store.servers) { server in
                     HStack {
                         Button {
@@ -540,15 +541,11 @@ struct SettingsView: View {
                         }
                     }
                 }
-            } header: {
-                Text("Servers")
-            } footer: {
-                Text("Tap the circle to make a server active; tap the name to edit it. The active server's settings are used when you connect.")
-            }
+            }, footerText: "Tap the circle to make a server active; tap the name to edit it. The active server's settings are used when you connect.")
 
             // VK Account Auth (non-anonymous cookie path). Default OFF. When ON,
             // GetVKCreds uses ONLY the logged-in cookie (no anonymous fallback).
-            Section {
+            MD3Section("VK Account Auth", content: {
                 Toggle("Use VK account (cookie) auth", isOn: $vkAuthEnabled)
 
                 if vkAuthEnabled {
@@ -573,19 +570,15 @@ struct SettingsView: View {
                         }
                     }
                 }
-            } header: {
-                Text("VK Account Auth")
-            } footer: {
-                Text("Non-anonymous fallback for when VK disables anonymous call join. Log in to a VK account (a burner is recommended) in an embedded browser — 2FA works. Only the session cookies are stored, in the Keychain, never in a backup. When ON the app uses ONLY this path (no anonymous fallback). Turning it OFF keeps the saved cookies for later.")
-            }
+            }, footerText: "Non-anonymous fallback for when VK disables anonymous call join. Log in to a VK account (a burner is recommended) in an embedded browser — 2FA works. Only the session cookies are stored, in the Keychain, never in a backup. When ON the app uses ONLY this path (no anonymous fallback). Turning it OFF keeps the saved cookies for later.")
 
-            Section {
+            MD3Section {
                 NavigationLink(destination: AdvancedView()) {
                     Label("Advanced", systemImage: "slider.horizontal.3")
                 }
             }
 
-            Section {
+            MD3Section("Backup & Restore", content: {
                 Button(action: handleExport) {
                     Label("Export Full Backup…", systemImage: "square.and.arrow.up")
                 }
@@ -611,17 +604,11 @@ struct SettingsView: View {
                 Button(role: .destructive, action: { showResetProfileConfirm = true }) {
                     Label("Reset Captured Browser Profile", systemImage: "trash")
                 }
-            } header: {
-                Text("Backup & Restore")
-            } footer: {
-                // Make the sensitivity explicit. Settings + WireGuard
-                // private/preshared keys + cached VK TURN credentials
-                // + captured browser profile give whoever holds the file
-                // the same VPN access the user has — there's no
-                // encryption layer.
-                Text("Backup contains all settings, WireGuard keys, TURN credentials, and the captured browser profile. Treat the exported file as a secret.")
+            }, footerText: "Backup contains all settings, WireGuard keys, TURN credentials, and the captured browser profile. Treat the exported file as a secret.")
             }
+            .padding(.vertical)
         }
+        .background(Color(uiColor: .systemGroupedBackground))
         .dismissKeyboardOnDrag()
         .navigationTitle("Settings")
         // Share sheet for the freshly-exported temp file. Bound to a

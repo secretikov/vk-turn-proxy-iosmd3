@@ -84,13 +84,14 @@ struct ServerEditView: View {
     }
 
     var body: some View {
-        Form {
-            Section("Server name") {
+        ScrollView {
+            VStack(spacing: 16) {
+            MD3Section("Server name") {
                 TextField("Server name", text: $draft.serverName)
                     .disableAutocorrection(true)
             }
 
-            Section("Transport") {
+            MD3Section("Transport") {
                 // Proxy Server (peerAddress) applies to ALL modes — incl.
                 // SRTP-WRAP-A, where it is the amurcanov DTLS server address
                 // (only the WireGuard-keys section below is hidden in WRAP-A,
@@ -151,7 +152,7 @@ struct ServerEditView: View {
             // SRTP+WRAP / SRTP-WRAP-S. In SRTP-WRAP-A they are minted by the
             // server via GETCONF, so hide the whole section in that mode.
             if mode.wrappedValue != .srtpWrapA {
-                Section("WireGuard") {
+                MD3Section("WireGuard") {
                     SecureField("Private Key (base64)", text: $draft.privateKey)
                         .autocapitalization(.none).disableAutocorrection(true)
                     hint(ConfigValidation.wgKey(draft.privateKey, label: "Private key", required: true))
@@ -170,7 +171,7 @@ struct ServerEditView: View {
                 }
             }
 
-            Section {
+            MD3Section(content: {
                 Button {
                     draft = store.addNew()
                 } label: { Label("New server", systemImage: "plus") }
@@ -184,10 +185,11 @@ struct ServerEditView: View {
                     dismiss()
                 } label: { Label("Delete server", systemImage: "trash") }
                     .disabled(store.servers.count <= 1)
-            } footer: {
-                Text("New creates a server with default settings. Copy duplicates this one. The last server can't be deleted. vkLink and VK account auth are global (Settings screen), not per-server.")
+            }, footerText: "New creates a server with default settings. Copy duplicates this one. The last server can't be deleted. vkLink and VK account auth are global (Settings screen), not per-server.")
             }
+            .padding(.vertical)
         }
+        .background(Color(uiColor: .systemGroupedBackground))
         .dismissKeyboardOnDrag()
         .navigationTitle(draft.serverName.isEmpty ? "Server" : draft.serverName)
         .navigationBarTitleDisplayMode(.inline)

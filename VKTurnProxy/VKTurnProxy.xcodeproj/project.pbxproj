@@ -15,6 +15,7 @@
 		23FB3FA154A0B74AE5DFB39C /* ConfigValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACB6146869BD6DC55039EC2 /* ConfigValidation.swift */; };
 		302CCA96A99CD22B03E23267 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F2E4485000AF848A0CFE03 /* AppIntents.framework */; };
 		34A869BAE79B9DB63568AC30 /* ServerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16894D17BB018EECDC8F01FF /* ServerEditView.swift */; };
+		3A18428EBD840631584A54BE /* MD3Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A14DCEB39C5108ED26B764 /* MD3Style.swift */; };
 		3A39EA7CCA17B5386327D0EA /* VKTurnProxyWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9126F72D30AE6D3503CC167 /* VKTurnProxyWidgetBundle.swift */; };
 		3A638CAC10B3F4B84965F83F /* LiveActivityIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF216A96C8B2716DA861C50 /* LiveActivityIntents.swift */; };
 		3F33AE79B74735B536FE1D31 /* SharedLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A648919F90B0D8CBE826BC6E /* SharedLogger.swift */; };
@@ -95,6 +96,7 @@
 		17FC00C95995BA91DADA2EB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		196C853F06BE5F3D3202EA2D /* VKTurnProxyWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = VKTurnProxyWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		284043E2EA6CAC284FF241D3 /* VPNActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNActivityAttributes.swift; sourceTree = "<group>"; };
+		37A14DCEB39C5108ED26B764 /* MD3Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MD3Style.swift; sourceTree = "<group>"; };
 		3979E0E80EBC90588B51D4A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		41F2E4485000AF848A0CFE03 /* AppIntents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppIntents.framework; path = System/Library/Frameworks/AppIntents.framework; sourceTree = SDKROOT; };
 		48CEB6CB28E1CC064B6D8C79 /* VKProfileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKProfileCache.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				12A7A42ADDB7D021CA9C8352 /* VKTurnProxy.entitlements */,
 				FDE10D4B4A2BE32E0DD5E3D4 /* VKTurnProxyApp.swift */,
 				284043E2EA6CAC284FF241D3 /* VPNActivityAttributes.swift */,
+				37A14DCEB39C5108ED26B764 /* MD3Style.swift */,
 			);
 			path = VKTurnProxy;
 			sourceTree = "<group>";
@@ -423,6 +426,7 @@
 				E1250E1BF6D8FBFBCCFB25BF /* VKProfileCache.swift in Sources */,
 				5BFFE56605C7A3D0A4672924 /* VKTurnProxyApp.swift in Sources */,
 				AACB3A08FC4C5ACF9B5D9FE0 /* VPNActivityAttributes.swift in Sources */,
+				3A18428EBD840631584A54BE /* MD3Style.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
