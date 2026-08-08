@@ -52,8 +52,9 @@ struct AdvancedView: View {
     @AppStorage("forceLegacyCaptcha") private var forceLegacyCaptcha = false
 
     var body: some View {
-        Form {
-            Section {
+        ScrollView {
+            VStack(spacing: 16) {
+            MD3Section("Live Activity", content: {
                 Toggle("Enable", isOn: $liveActivityEnabled)
                     // Apply immediately rather than at the next status change:
                     // turning it OFF must remove a card that is on screen right
@@ -74,15 +75,9 @@ struct AdvancedView: View {
                     .onChange(of: liveActivityCompactClock) { _ in
                         TunnelManager.shared.refreshLiveActivity()
                     }
-            } header: {
-                // Per-feature section, so the header names the feature and the
-                // row says what the switch does. More sections are expected here.
-                Text("Live Activity")
-            } footer: {
-                Text("Shows the connection state and the active server on the Lock Screen, and in the Dynamic Island on iPhone 14 Pro and later. On iOS 17+ it also gets buttons to disconnect and to switch server without opening the app. Requires iOS 16.2 or later. Off by default.\n\nSession time in the collapsed island widens it, so iOS hides part of the status bar — on cellular the network-type label, on Wi-Fi the signal indicator. The clock is always shown on the Lock Screen card and in the expanded island, where there is room for it.")
-            }
+            }, footerText: "Shows the connection state and the active server on the Lock Screen, and in the Dynamic Island on iPhone 14 Pro and later. On iOS 17+ it also gets buttons to disconnect and to switch server without opening the app. Requires iOS 16.2 or later. Off by default.\n\nSession time in the collapsed island widens it, so iOS hides part of the status bar — on cellular the network-type label, on Wi-Fi the signal indicator. The clock is always shown on the Lock Screen card and in the expanded island, where there is room for it.")
 
-            Section {
+            MD3Section("Tunnel", content: {
                 Toggle("Set MTU manually", isOn: mtuIsManual)
 
                 // Shown only while manual: a disabled stepper displaying the
@@ -98,27 +93,15 @@ struct AdvancedView: View {
                         }
                     }
                 }
-            } header: {
-                Text("Tunnel")
-            } footer: {
-                // The numbers are deliberately in the UI: someone reaches for
-                // this setting while diagnosing, and "what should I try?" is the
-                // next question. Range and reasoning live in TunnelMTU.swift.
-                Text("Size of the largest packet the tunnel carries. Automatic uses \(TunnelMTU.standard); on SRTP-WRAP-A servers automatic means the server's own value, and setting it here overrides that.\n\nLower it (try \(TunnelMTU.standard - 64)) if the tunnel connects but large transfers stall — that is the usual sign that packets are too big for the network's path.\n\nThis setting is for making a difficult network work, not for going faster.\n\nAllowed range \(TunnelMTU.minimum)–\(TunnelMTU.maximum). Applied on the next connect.")
-            }
+            }, footerText: "Size of the largest packet the tunnel carries. Automatic uses \(TunnelMTU.standard); on SRTP-WRAP-A servers automatic means the server's own value, and setting it here overrides that.\n\nLower it (try \(TunnelMTU.standard - 64)) if the tunnel connects but large transfers stall — that is the usual sign that packets are too big for the network's path.\n\nThis setting is for making a difficult network work, not for going faster.\n\nAllowed range \(TunnelMTU.minimum)–\(TunnelMTU.maximum). Applied on the next connect.")
 
-            Section {
+            MD3Section("Diagnostics", content: {
                 Toggle("Force legacy captcha path", isOn: $forceLegacyCaptcha)
-            } header: {
-                Text("Diagnostics")
-            } footer: {
-                // Deliberately blunt about the cost. This is the one switch here
-                // that makes the app slower and more fragile on purpose, and the
-                // person who finds it should be able to tell whether they want it
-                // without reading the source.
-                Text("Skips the captcha-free path VK Calls uses, so getting credentials falls through to the older flow that has to solve a captcha. That solver never runs otherwise, which is exactly why it is hard to test.\n\nLeave this off. On, connecting is slower, can fail where it would have succeeded, and repeated attempts may get the captcha refused for a while. Applied on the next connect.")
+            }, footerText: "Skips the captcha-free path VK Calls uses, so getting credentials falls through to the older flow that has to solve a captcha. That solver never runs otherwise, which is exactly why it is hard to test.\n\nLeave this off. On, connecting is slower, can fail where it would have succeeded, and repeated attempts may get the captcha refused for a while. Applied on the next connect.")
             }
+            .padding(.vertical)
         }
+        .background(Color(uiColor: .systemGroupedBackground))
         .navigationTitle("Advanced")
     }
 }
