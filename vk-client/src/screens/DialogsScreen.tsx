@@ -49,7 +49,7 @@ export const DialogsScreen = () => {
         avatarUrl = user.photo_100 || user.photo_50;
       }
     } else if (conversation.peer.type === 'group') {
-      const group = groups[-peerId];
+      const group = groups[peerId];
       if (group) {
         title = group.name;
         avatarUrl = group.photo_100 || group.photo_50;
