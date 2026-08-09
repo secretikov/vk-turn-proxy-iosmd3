@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { List, Avatar, Text, Badge, useTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import { vkApi } from '../api/vk';
 
 export const DialogsScreen = () => {
+  const navigation = useNavigation<any>();
   const [dialogs, setDialogs] = useState<any[]>([]);
   const [profiles, setProfiles] = useState<{ [key: number]: any }>({});
   const [groups, setGroups] = useState<{ [key: number]: any }>({});
@@ -85,7 +87,7 @@ export const DialogsScreen = () => {
             )}
           </View>
         )}
-        onPress={() => {}}
+        onPress={() => navigation.navigate('Chat', { title, peerId })}
         style={styles.listItem}
       />
     );
