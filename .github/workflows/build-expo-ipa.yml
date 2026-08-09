@@ -1,0 +1,67 @@
+name: Build Expo iOS App (IPA)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: vk-client/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+      working-directory: vk-client
+
+    - name: Setup Expo
+      uses: expo/expo-github-action@v8
+      with:
+        expo-version: latest
+        eas-version: latest
+        token: ${{ secrets.EXPO_TOKEN }} # Only needed if you want EAS, but we use prebuild locally
+
+    - name: Prebuild iOS project
+      run: npx expo prebuild --platform ios --clean
+      working-directory: vk-client
+
+    - name: Setup CocoaPods
+      run: cd vk-client/ios && pod install
+
+    - name: Build and archive
+      run: |
+        xcodebuild archive \
+          -workspace vkclient.xcworkspace \
+          -scheme vkclient \
+          -configuration Release \
+          -archivePath $PWD/build/vkclient.xcarchive \
+          -sdk iphoneos \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
+      working-directory: vk-client/ios
+
+    - name: Export IPA
+      run: |
+        mkdir -p Payload
+        cp -r build/vkclient.xcarchive/Products/Applications/vkclient.app Payload/
+        zip -r vkclient.ipa Payload
+        rm -rf Payload
+      working-directory: vk-client/ios
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: vkclient.ipa
+        path: vk-client/ios/vkclient.ipa
