@@ -44,7 +44,9 @@ jobs:
       working-directory: vk-client/ios
 
     - name: Setup CocoaPods
-      run: pod install --repo-update
+      run: |
+        pod install --repo-update
+        pod update expo-av ExpoModulesCore
       working-directory: vk-client/ios
 
     - name: Build and archive
