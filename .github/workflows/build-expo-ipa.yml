@@ -21,6 +21,9 @@ jobs:
         cache: 'npm'
         cache-dependency-path: vk-client/package-lock.json
 
+    - name: Clean npm cache
+      run: npm cache clean --force
+
     - name: Install dependencies
       run: npm ci
       working-directory: vk-client
@@ -36,17 +39,20 @@ jobs:
       run: npx expo prebuild --platform ios --clean
       working-directory: vk-client
 
-    - name: Clean build cache
+    - name: Aggressive clean
       run: |
         rm -rf ~/Library/Developer/Xcode/DerivedData/* || true
-        rm -rf Pods
-        rm -f Podfile.lock
-      working-directory: vk-client/ios
+        rm -rf ~/Library/Caches/CocoaPods || true
+        cd vk-client/ios
+        rm -rf Pods Podfile.lock
+        rm -rf .xcode.env .xcode.env.local
+      working-directory: .
 
     - name: Setup CocoaPods
       run: |
         pod repo update
-        pod install --repo-update
+        pod deintegrate || true
+        pod install --repo-update --verbose
       working-directory: vk-client/ios
 
     - name: Build and archive
@@ -57,6 +63,8 @@ jobs:
           -configuration Release \
           -archivePath $PWD/build/vkclient.xcarchive \
           -sdk iphoneos \
+          -derivedDataPath $PWD/build/DerivedData \
+          -verbose \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO
